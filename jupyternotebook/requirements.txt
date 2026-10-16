@@ -1,0 +1,6 @@
+langgraph
+langgraph-checkpoint-redis
+langchain-ollama
+langchain-core
+ollama
+redisvl
