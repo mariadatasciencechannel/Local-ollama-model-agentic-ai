@@ -1,0 +1,49 @@
+services:
+  redis:
+    build: ./redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/home/youtube_video_code/redis_project/docker_modules/redis/
+    networks:
+      - my_network_ai
+    restart: unless-stopped
+
+  ollama:
+    build: ./ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/home/youtube_video_code/redis_project/docker_modules/ollama/.ollama
+    networks:
+      - my_network_ai
+    restart: unless-stopped
+
+  jupyter:
+    build: ./jupyternotebook 
+    container_name: local-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - jupyter_data:/home/youtube_video_code/redis_project/docker_modules/jupyternotebook/
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - my_network_ai
+    depends_on:
+      - ollama
+      - redis
+    restart: unless-stopped
+
+
+networks:
+  my_network_ai:
+    driver: bridge
+volumes:
+  ollama_data:
+  jupyter_data:
+  redis_data:
